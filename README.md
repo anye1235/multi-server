@@ -30,9 +30,17 @@
 
 #### 特技
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+### 品牌的信息列表
+> 品牌名称id
+>https://car.autohome.com.cn/2sc/loadbrand.ashx?area=guangzhou&brand=&ls=&spec=0&minPrice=0&maxPrice=0&minRegisteAge=0&maxRegisteAge=0&MileageId=0&disp=0&stru=0&gb=0&color=0&source=0&listview=0&sell=1&newCar=0&credit=0&sort=0&kw=&ex=c0d0t0p0w0r0u0e0s0a0o0i0b0
+
+### 品牌的名字-logo 列表
+>需要解析html
+>https://m.che168.com/beijing/list/
+
+### 城市列表
+>在代码里占时有一份
+
+### 车辆城市列表
+>https://car.autohome.com.cn/2sc/guangzhou/list/
+> https://car.autohome.com.cn/2
