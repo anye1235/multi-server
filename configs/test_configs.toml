@@ -1,0 +1,88 @@
+
+Api2Url = 'http://php-yn-api2.fwpt-php/api2'
+BasePath = "/app-go"
+H5UsrInvoiceUrl = 'https://t-static.ybsjyyn.com/app/invoice.html#/'
+H5UsrServiceUrl = 'https://t-static.ybsjyyn.com/app/about.html#/about/service'
+MyAppointmentUrl = 'https://t-static.ybsjyyn.com/yyn/vistApt.html#/myAppointment?login=require'
+YoupinHomeUrl = 'https://tops.ybsjyyn.com/htmlrouter/dist/pages/index/index'
+YoupinOrderUrl = 'https://tops.ybsjyyn.com/htmlrouter/dist/pages/member/order/index'
+fwpthost = 'https://tmp-gw.ybsjyyn.com/integrate/api/app'
+HomeUrl = "https://tyyn.ybsjyyn.com/app"
+WeatherH5Url = 'https://t-static.ybsjyyn.com/app/weather.html#/detail'
+ZuulUrl = 'http://yn-fwpt-zuul.app-middleware:8080'
+
+
+[hashids]
+length = 12
+secret = "6ab6122836cfef95f8db"
+
+[jwt]
+expireduration = 24
+secret = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDEGlLu6RCS3juC2RIgUf5nF1BSJnTfnH8fK0rHn53AuE8rvK6rgjW/WHB65NR5q08LpinSlH6CjvJ8+vNEzy+EDjowNRtcRTXcz4Ck8kuq5oq1B2rwbL3XQvsUoGtYXgol7fY34yEXfy8sfFIXy+u0udwzgCv24q0D5IUE021vPwIDAQAB"
+
+[mail]
+host = "smtp.163.com"
+pass = ""
+port = 465
+to = ""
+user = ""
+
+[mongodb]
+addr = "mongouser:mddev1211@192.168.20.2:27017/db_dev_yn_app?authSource=admin"
+dbs = [
+  "db_dev_yn_app",
+]
+
+# [mysql]
+#   [mysql.base]
+#     connmaxlifetime = 60
+#     maxidleconn = 60
+#     maxopenconn = 10
+#   [mysql.read]
+#     addr = "192.168.20.7:3306"
+#     name = "yn_test_app"
+#     user = "order_root"
+#     pass = "order@root0102"
+#   [mysql.write]
+#     addr = "192.168.20.7:3306"
+#     name = "yn_test_app"
+#     user = "order_root"
+#     pass = "order@root0102"
+
+[redis]
+addr = "192.168.20.8:6379"
+db = "0"
+maxretries = 3
+minidleconns = 5
+pass = "crs-32y2dslh:spa@redis1211"
+poolsize = 10
+
+[urltoken]
+expireduration = 10
+secret = "i1ydX9RtHyuJTrw7frcu"
+
+[datacenter]
+appid = "service"
+appkey = "aefacf86"
+host = "http://apitest-internal.bdc.ybsjyyn.com"
+
+[datacenterv2]
+appid = 2
+host = "http://cloud9-staging.bdc.ybsjyyn.com"
+
+[accessToken]
+#     host = "https://tgw.ybsjyyn.com/test"
+addr = "https://tgw.ybsjyyn.com/test"
+appid = "3610204c07a85e93"
+appkey = "88544edf4b2a95d0534ae8bfe5f2958ab3f569c8"
+
+[kafkaES]
+addr = [
+  "192.168.210.8:9092",
+]
+topic = "kibana_log"
+[kafkaSQM]
+addr = [
+  "192.168.110.49:9092",
+]
+topic = "sqm"

@@ -7,8 +7,9 @@
 软件架构说明
 
 #### 安装教程
-1.  go mod vendor
-2.  go build
+1.  go mod tidy
+2.  go mod vendor
+3.  go build
 
 #### 使用说明
 1.  直接运行可执行文件
