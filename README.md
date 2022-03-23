@@ -29,7 +29,7 @@
 
 ### 车辆城市列表
 >https://car.autohome.com.cn/2sc/guangzhou/list/
-> https://car.autohome.com.cn/2
+> https://car.autohome.com.cn/2sc/{city}/list/
 
 # 爬取汽车之家 二手车产品库
 
