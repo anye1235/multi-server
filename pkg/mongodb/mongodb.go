@@ -15,7 +15,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var _ Repo = (*Mongo)(nil)
+var MongoClient Repo = (*Mongo)(nil)
 
 type Repo interface {
 	i()
@@ -33,6 +33,10 @@ type Mongo struct {
 	client    *mongo.Client
 	ctx       context.Context
 	defaultDB string
+}
+
+func GetMongoClient() Repo {
+	return MongoClient
 }
 
 func New() (Repo, error) {
@@ -58,11 +62,12 @@ func New() (Repo, error) {
 	if nil != cfg.DBs && 0 != len(cfg.DBs) {
 		defautlDB = cfg.DBs[0]
 	}
-	return &Mongo{
+	MongoClient = &Mongo{
 		ctx:       ctx,
 		client:    client,
 		defaultDB: defautlDB,
-	}, nil
+	}
+	return MongoClient, nil
 }
 
 func (p *Mongo) i() {}

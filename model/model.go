@@ -1,8 +1,10 @@
 package model
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"ty/car-prices-master/pkg/mongodb"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -31,9 +33,9 @@ func init() {
 	}
 }
 
-func AddCars(cars []spiders.QcCar) {
+func AddCars(ctx context.Context, cars []*spiders.QcCar) {
 	for index, car := range cars {
-		if err := DB.Create(&car).Error; err != nil {
+		if _, err := mongodb.GetMongoClient().Insert(ctx, "", "tbl_car_price", car); err != nil {
 			log.Printf("db.Create index: %s, err : %v", index, err)
 		}
 	}

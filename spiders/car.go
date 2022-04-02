@@ -2,6 +2,7 @@ package spiders
 
 import (
 	"encoding/json"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"regexp"
 	"strconv"
@@ -32,11 +33,12 @@ type QcCity struct {
 }
 
 type QcCar struct {
-	CityName  string
-	Title     string
-	Price     float64
-	Kilometer float64
-	Year      int
+	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	CityName  string             `bson:"city_name" json:"city_name"`
+	Title     string             `bson:"title" json:"title"`
+	Price     float64            `bson:"price" json:"price"`
+	Kilometer float64            `bson:"kilometer" json:"kilometer"`
+	Year      int                `bson:"year" json:"year"`
 }
 
 func GetCitys() []QcCity {
@@ -76,7 +78,7 @@ func GetCurrentPage(doc *goquery.Document) (page int) {
 	return page
 }
 
-func GetCars(doc *goquery.Document) (cars []QcCar) {
+func GetCars(doc *goquery.Document) (cars []*QcCar) {
 	cityName := GetCityName(doc)
 	doc.Find(".piclist ul li:not(.line)").Each(func(i int, selection *goquery.Selection) {
 		title := selection.Find(".title a").Text()
@@ -91,7 +93,7 @@ func GetCars(doc *goquery.Document) (cars []QcCar) {
 		kilometerS, _ := strconv.ParseFloat(kilometer, 64)
 		yearS, _ := strconv.Atoi(year)
 
-		cars = append(cars, QcCar{
+		cars = append(cars, &QcCar{
 			CityName:  cityName,
 			Title:     title,
 			Price:     priceS,

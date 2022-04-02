@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"time"
+	"ty/car-prices-master/pkg/mongodb"
 
 	"github.com/PuerkitoBio/goquery"
 	"ty/car-prices-master/downloader"
@@ -20,10 +22,10 @@ var (
 	BaseUrl  = "https://car.autohome.com.cn"
 
 	maxPage int = 99
-	cars    []spiders.QcCar
+	cars    []*spiders.QcCar
 )
 
-func Start(url string, ch chan []spiders.QcCar) {
+func Start(url string, ch chan []*spiders.QcCar) {
 	body := downloader.Get(BaseUrl + url)
 	doc, err := goquery.NewDocumentFromReader(body)
 	if err != nil {
@@ -48,6 +50,11 @@ func Start(url string, ch chan []spiders.QcCar) {
 }
 
 func main() {
+	_, err := mongodb.New()
+	if err != nil {
+		log.Fatal("new mongo err", err)
+	}
+
 	citys := spiders.GetCitys()
 	for _, v := range citys {
 		scheduler.AppendUrl(fmt.Sprintf(StartUrl, v.Pinyin))
@@ -56,7 +63,8 @@ func main() {
 	start := time.Now()
 	delayTime := time.Second * 6
 
-	ch := make(chan []spiders.QcCar)
+	ctx := context.Background()
+	ch := make(chan []*spiders.QcCar)
 
 L:
 	for {
@@ -75,7 +83,7 @@ L:
 	}
 
 	if len(cars) > 0 {
-		model.AddCars(cars)
+		model.AddCars(ctx, cars)
 	}
 
 	log.Printf("Time: %s", time.Since(start)-delayTime)
