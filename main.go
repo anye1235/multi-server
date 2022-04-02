@@ -61,7 +61,7 @@ func main() {
 	}
 
 	start := time.Now()
-	delayTime := time.Second * 6
+	delayTime := time.Second * 6000
 
 	ctx := context.Background()
 	ch := make(chan []*spiders.QcCar)

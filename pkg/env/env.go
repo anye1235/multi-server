@@ -75,7 +75,7 @@ func init() {
 		active = prod
 	default:
 		active = dev
-		fmt.Println("Warning: '-env' cannot be found, or it is illegal. The default 'fat' will be used.")
+		fmt.Println("Warning: '-env' cannot be found, or it is illegal. The default 'dev' will be used.")
 	}
 }
 

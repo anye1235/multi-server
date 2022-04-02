@@ -83,16 +83,24 @@ func GetCars(doc *goquery.Document) (cars []*QcCar) {
 	doc.Find(".piclist ul li:not(.line)").Each(func(i int, selection *goquery.Selection) {
 		title := selection.Find(".title a").Text()
 		price := selection.Find(".detail .detail-r").Find(".colf8").Text()
-		kilometer := selection.Find(".detail .detail-l").Find("p").Eq(0).Text()
+		kilometerHtml, _ := selection.Find(".detail .detail-l").Find("p").Eq(0).Html()
 		year := selection.Find(".detail .detail-l").Find("p").Eq(1).Text()
 
-		// 数据处理
-		kilometer = strings.Join(compileNumber.FindAllString(kilometer, -1), "")
+		kilometer := ""
+		reg := regexp.MustCompile(`\d+\.\d+|\d+`)
+		if reg != nil {
+			kilometerList := reg.FindAllString(kilometerHtml, 1)
+			if len(kilometerList) != 0 {
+				kilometer = kilometerList[0]
+			}
+		}
+
 		year = strings.Join(compileNumber.FindAllString(strings.TrimSpace(year), -1), "")
 		priceS, _ := strconv.ParseFloat(price, 64)
 		kilometerS, _ := strconv.ParseFloat(kilometer, 64)
 		yearS, _ := strconv.Atoi(year)
 
+		//todo 解析title为其他属性
 		cars = append(cars, &QcCar{
 			CityName:  cityName,
 			Title:     title,
