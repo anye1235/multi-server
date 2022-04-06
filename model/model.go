@@ -36,7 +36,15 @@ func init() {
 func AddCars(ctx context.Context, cars []*spiders.QcCar) {
 	for index, car := range cars {
 		if _, err := mongodb.GetMongoClient().Insert(ctx, "", "tbl_car_price", car); err != nil {
-			log.Printf("db.Create index: %s, err : %v", index, err)
+			log.Printf("db.Create index: %v, err : %v", index, err)
+		}
+	}
+}
+
+func AddCarsOpt(ctx context.Context, cars ...*spiders.QcCar) {
+	for index, car := range cars {
+		if _, err := mongodb.GetMongoClient().Insert(ctx, "", "tbl_car_price", car); err != nil {
+			log.Printf("db.Create index: %v, err : %v", index, err)
 		}
 	}
 }

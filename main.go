@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"time"
 	"ty/car-prices-master/pkg/mongodb"
@@ -21,11 +22,12 @@ var (
 	StartUrl = "/2sc/%s/list/"
 	BaseUrl  = "https://car.autohome.com.cn"
 
-	maxPage int = 99
+	maxPage = 1000
 	cars    []*spiders.QcCar
 )
 
-func Start(url string, ch chan []*spiders.QcCar) {
+func Start(url string, ch chan []*spiders.QcCar, loopCount int) {
+	time.Sleep(time.Second * 1)
 	body := downloader.Get(BaseUrl + url)
 	doc, err := goquery.NewDocumentFromReader(body)
 	if err != nil {
@@ -33,11 +35,16 @@ func Start(url string, ch chan []*spiders.QcCar) {
 	}
 
 	currentPage := spiders.GetCurrentPage(doc)
+	if 0 == currentPage && loopCount < 10 {
+		loopCount++
+		Start(url, ch, loopCount)
+		return
+	}
 	nextPageUrl, _ := spiders.GetNextPageUrl(doc)
 
 	if currentPage > 0 && currentPage <= maxPage {
 		cars := spiders.GetCars(doc)
-		log.Println(cars)
+		log.Printf("input cars numbers: %v", len(cars))
 		ch <- cars
 		if url := nextPageUrl; url != "" {
 			scheduler.AppendUrl(url)
@@ -45,7 +52,9 @@ func Start(url string, ch chan []*spiders.QcCar) {
 
 		log.Println(url)
 	} else {
-		log.Println("Max page !!!")
+		log.Printf("Max page !!! curr: %v, maxPage: %v, url:%s", currentPage, maxPage, url)
+		bodyByte, _ := ioutil.ReadAll(body)
+		log.Printf("%s", bodyByte)
 	}
 }
 
@@ -56,35 +65,46 @@ func main() {
 	}
 
 	citys := spiders.GetCitys()
+	log.Printf("total citys: %v", len(citys))
 	for _, v := range citys {
-		scheduler.AppendUrl(fmt.Sprintf(StartUrl, v.Pinyin))
+		go scheduler.AppendUrl(fmt.Sprintf(StartUrl, v.Pinyin))
 	}
 
+	log.Printf("total city urls : %v", len(scheduler.URLs))
+
 	start := time.Now()
-	delayTime := time.Second * 6000
+	delayTime := time.Second * 36000
 
 	ctx := context.Background()
-	ch := make(chan []*spiders.QcCar)
+	ch := make(chan []*spiders.QcCar, 1000)
+	totalPop := 0
+	totalCreate := 0
 
 L:
 	for {
 		if url := scheduler.PopUrl(); url != "" {
-			go Start(url, ch)
+			totalPop++
+			go Start(url, ch, 0)
 		}
+
+		log.Printf("total cars len: %v", len(ch))
 
 		select {
 		case r := <-ch:
-			cars = append(cars, r...)
-			go Start(scheduler.PopUrl(), ch)
+			//cars = append(cars, r...)
+			log.Printf("current carlist len: %v", len(cars))
+			model.AddCarsOpt(ctx, r...)
+			totalCreate++
+			go Start(scheduler.PopUrl(), ch, 0)
 		case <-time.After(delayTime):
-			log.Println("Timeout...")
+			log.Println("channel Timeout...")
 			break L
 		}
 	}
 
-	if len(cars) > 0 {
-		model.AddCars(ctx, cars)
-	}
+	//if len(cars) > 0 {
+	//	model.AddCars(ctx, cars)
+	//}
 
-	log.Printf("Time: %s", time.Since(start)-delayTime)
+	log.Printf("Cost Time: %v", time.Since(start).Seconds())
 }
