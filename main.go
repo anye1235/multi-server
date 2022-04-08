@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"time"
 	"ty/car-prices-master/pkg/mongodb"
 
@@ -22,12 +23,12 @@ var (
 	StartUrl = "/2sc/%s/list/"
 	BaseUrl  = "https://car.autohome.com.cn"
 
-	maxPage = 1000
-	cars    []*spiders.QcCar
+	maxPage          = 1000
+	cars             []*spiders.QcCar
+	totalSleepSecond = 0
 )
 
-func Start(url string, ch chan []*spiders.QcCar, loopCount int) {
-	time.Sleep(time.Second * 1)
+func Start(url string, ch chan []*spiders.QcCar, loopCount int64) {
 	body := downloader.Get(BaseUrl + url)
 	doc, err := goquery.NewDocumentFromReader(body)
 	if err != nil {
@@ -35,13 +36,21 @@ func Start(url string, ch chan []*spiders.QcCar, loopCount int) {
 	}
 
 	currentPage := spiders.GetCurrentPage(doc)
-	if 0 == currentPage && loopCount < 10 {
+	if 0 == currentPage && loopCount <= 4 {
+		totalSleepSecond++
+		log.Printf("totalSleepSecond: %v", totalSleepSecond)
+
+		time.Sleep(time.Second * time.Duration(math.Pow(2, float64(loopCount))))
 		loopCount++
+
 		Start(url, ch, loopCount)
 		return
+	} else if loopCount >= 5 {
+		scheduler.AppendUrl(url)
+		return
 	}
-	nextPageUrl, _ := spiders.GetNextPageUrl(doc)
 
+	nextPageUrl, _ := spiders.GetNextPageUrl(doc)
 	if currentPage > 0 && currentPage <= maxPage {
 		cars := spiders.GetCars(doc)
 		log.Printf("input cars numbers: %v", len(cars))
@@ -84,7 +93,7 @@ L:
 	for {
 		if url := scheduler.PopUrl(); url != "" {
 			totalPop++
-			go Start(url, ch, 0)
+			Start(url, ch, 0)
 		}
 
 		log.Printf("total cars len: %v", len(ch))
@@ -95,9 +104,11 @@ L:
 			log.Printf("current carlist len: %v", len(cars))
 			model.AddCarsOpt(ctx, r...)
 			totalCreate++
-			go Start(scheduler.PopUrl(), ch, 0)
+			//go Start(scheduler.PopUrl(), ch, 0)
+			Start(scheduler.PopUrl(), ch, 0)
 		case <-time.After(delayTime):
 			log.Println("channel Timeout...")
+			log.Printf("timeout url list: \n %v", scheduler.URLs)
 			break L
 		}
 	}
