@@ -26,9 +26,15 @@ var (
 	maxPage          = 1000
 	cars             []*spiders.QcCar
 	totalSleepSecond = 0
+	lastQueryTime    = time.Now()
 )
 
 func Start(url string, ch chan []*spiders.QcCar, loopCount int64) {
+	if time.Since(lastQueryTime).Milliseconds() < 1000 {
+		time.Sleep(1 * time.Second)
+	}
+	lastQueryTime = time.Now()
+
 	body := downloader.Get(BaseUrl + url)
 	doc, err := goquery.NewDocumentFromReader(body)
 	if err != nil {
