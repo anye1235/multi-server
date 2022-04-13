@@ -117,7 +117,10 @@ L:
 			log.Println("channel Timeout...")
 			log.Printf("timeout url list: \n %v", scheduler.URLs)
 			break L
+		default:
+
 		}
+
 	}
 
 	//if len(cars) > 0 {
