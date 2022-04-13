@@ -30,17 +30,19 @@ func PopUrl() string {
 }
 
 func AppendUrl(url string) {
-	URLs <- url
-	countExistMapOldNum(url)
+	if canAddUrl(url) {
+		URLs <- url
+	}
 }
 
-func countExistMapOldNum(url string) {
+func canAddUrl(url string) bool {
 	if 0 == len(url) {
-		return
+		return false
 	}
 	oldNum := existUrlMap[url]
 	if oldNum > MaxExistNum {
-		return
+		return false
 	}
 	existUrlMap[url] = oldNum + 1
+	return true
 }
