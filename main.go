@@ -67,7 +67,7 @@ func Start(url string, ch chan []*spiders.QcCar, loopCount int64) {
 
 		log.Println(url)
 	} else {
-		log.Printf("Max page !!! curr: %v, maxPage: %v, url:%s", currentPage, maxPage, url)
+		log.Printf("Max page !!! curr: %v, maxPa ge: %v, url:%s", currentPage, maxPage, url)
 		bodyByte, _ := ioutil.ReadAll(body)
 		log.Printf("%s", bodyByte)
 	}
@@ -79,7 +79,8 @@ func main() {
 		log.Fatal("new mongo err", err)
 	}
 
-	citys := spiders.GetCitys()
+	//citys := spiders.GetCitys()
+	citys := spiders.GetNewCitys()
 	log.Printf("total citys: %v", len(citys))
 	for _, v := range citys {
 		go scheduler.AppendUrl(fmt.Sprintf(StartUrl, v.Pinyin))

@@ -2,8 +2,10 @@ package scheduler
 
 //var URLs = []string{}
 //var mutex sync.Mutex
+const MaxExistNum = 3 //最大进入次数
 
 var URLs = make(chan string, 1000)
+var existUrlMap = make(map[string]int)
 
 func PopUrl() string {
 	//mutex.Lock()
@@ -29,4 +31,16 @@ func PopUrl() string {
 
 func AppendUrl(url string) {
 	URLs <- url
+	countExistMapOldNum(url)
+}
+
+func countExistMapOldNum(url string) {
+	if 0 == len(url) {
+		return
+	}
+	oldNum := existUrlMap[url]
+	if oldNum > MaxExistNum {
+		return
+	}
+	existUrlMap[url] = oldNum + 1
 }
