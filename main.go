@@ -30,6 +30,9 @@ var (
 )
 
 func Start(url string, ch chan []*spiders.QcCar, loopCount int64) {
+	if len(url) == 0 {
+		return
+	}
 	if time.Since(lastQueryTime).Milliseconds() < 1000 {
 		time.Sleep(1 * time.Second)
 	}
@@ -111,14 +114,12 @@ L:
 			log.Printf("current carlist len: %v", len(cars))
 			model.AddCarsOpt(ctx, r...)
 			totalCreate++
-			//go Start(scheduler.PopUrl(), ch, 0)
-			Start(scheduler.PopUrl(), ch, 0)
 		case <-time.After(delayTime):
 			log.Println("channel Timeout...")
 			log.Printf("timeout url list: \n %v", scheduler.URLs)
 			break L
 		default:
-
+			time.Sleep(time.Millisecond * 300)
 		}
 
 	}
