@@ -75,8 +75,21 @@ func Start(url string, ch chan []*spiders.QcCar, loopCount int64) {
 		log.Printf("%s", bodyByte)
 	}
 }
-
 func main() {
+	_, err := mongodb.New()
+	if err != nil {
+		log.Fatal("new mongo err", err)
+	}
+
+	// 获取品牌
+	spiders.GetAllBrands()
+
+	// 下载车型价格信息
+	//downLoadCarsPrices()
+
+}
+
+func downLoadCarsPrices() {
 	_, err := mongodb.New()
 	if err != nil {
 		log.Fatal("new mongo err", err)
