@@ -25,8 +25,8 @@ const SPIDERS_BRAND_URL = "https://car.autohome.com.cn/2sc/loadbrand.ashx?area=g
 
 type Brand struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id"`
-	Brandid   int                `bson:"brand_id" json:"brand_id"`
-	Brandname string             `bson:"brand_name" json:"brand_name"`
+	Brandid   int                `bson:"brand_id" json:"brandid"`
+	Brandname string             `bson:"brand_name" json:"brandname"`
 	Letter    string             `bson:"letter" json:"letter"`
 	Pinyin    string             `bson:"pinyin" json:"pinyin"`
 	URL       string             `bson:"url" json:"url"`
