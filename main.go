@@ -81,8 +81,11 @@ func main() {
 		log.Fatal("new mongo err", err)
 	}
 
+	//添加城市
+	spiders.AddAllCity()
+
 	// 获取品牌
-	spiders.GetAllBrands()
+	//spiders.AddAllBrands()
 
 	// 下载车型价格信息
 	//downLoadCarsPrices()

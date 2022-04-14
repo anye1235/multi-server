@@ -32,7 +32,7 @@ type Brand struct {
 	URL       string             `bson:"url" json:"url"`
 }
 
-func GetAllBrands() {
+func AddAllBrands() {
 	ctx := context.Background()
 	var res = make(map[string][]*Brand, 26)
 	if _, err := httpclient.DoGet(SPIDERS_BRAND_URL, nil, ctx, &res, new(ResultHandle)); nil != err {
