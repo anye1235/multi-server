@@ -27,6 +27,7 @@ type Repo interface {
 	Insert(ctx context.Context, db, cl string, data interface{}) (*mongo.InsertOneResult, error)
 	FindWithoutPage(ctx context.Context, db, cl string, filter interface{}, sort interface{}, data interface{}) error
 	FindManyCommon(ctx context.Context, db, cl string, filter interface{}, data interface{}, options *options.FindOptions) error
+	Update(ctx context.Context, db, cl string, filter interface{}, data interface{}, op *options.UpdateOptions) (*mongo.UpdateResult, error)
 }
 
 type Mongo struct {
@@ -263,7 +264,9 @@ func (p *Mongo) DeleteMany(ctx context.Context, db, cl string, filter interface{
 }
 
 func (p *Mongo) Update(ctx context.Context, db, cl string, filter interface{}, data interface{}, op *options.UpdateOptions) (*mongo.UpdateResult, error) {
-
+	if len(db) == 0 {
+		db = p.defaultDB
+	}
 	//userInfo, ok := ctx.Value(rest.USERCOOKIE).(*auth.UserInfo)
 	//if !ok {
 	//	return nil, fmt.Errorf("can not find user")

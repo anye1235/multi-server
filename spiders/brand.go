@@ -3,6 +3,7 @@ package spiders
 import (
 	"context"
 	"encoding/json"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"ty/car-prices-master/pkg/mongodb"
@@ -55,4 +56,20 @@ func AddBrand(ctx context.Context, brands []*Brand) {
 			log.Printf("tbl_brand Create index: %v, err : %v", index, err)
 		}
 	}
+}
+
+type UpdateBrand struct {
+	LogoUrl   string `bson:"logo_url" json:"url"`
+	UpdatedAt int64  `json:"updated_at" bson:"updated_at"`
+	UpdatedBy string `json:"updated_by" bson:"updated_by"`
+}
+
+func Update(ctx context.Context, id int, logoUrl string) {
+	logoUrl = "https:" + logoUrl
+	update := &UpdateBrand{LogoUrl: logoUrl}
+	filter := bson.D{{"brand_id", id}}
+	if _, err := mongodb.GetMongoClient().Update(ctx, "", "tbl_brand", filter, update, nil); nil != err {
+		log.Printf("tbl_brand UpdateBrand  err : %v", err)
+	}
+
 }
