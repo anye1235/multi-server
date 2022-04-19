@@ -88,9 +88,13 @@ func main() {
 	//spiders.AddAllBrands()
 
 	//获取品牌logo
-	spiders.GetBrandLogo()
+	//spiders.GetBrandLogo()
+
 	// 下载车型价格信息
 	//downLoadCarsPrices()
+
+	// 下载logo
+	spiders.DownLoadLogo()
 
 }
 

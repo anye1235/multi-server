@@ -31,6 +31,7 @@ type Brand struct {
 	Letter    string             `bson:"letter" json:"letter"`
 	Pinyin    string             `bson:"pinyin" json:"pinyin"`
 	URL       string             `bson:"url" json:"url"`
+	LogoUrl   string             `bson:"logo_url" json:"logo_url"`
 }
 
 func AddAllBrands() {
@@ -72,4 +73,13 @@ func Update(ctx context.Context, id int, logoUrl string) {
 		log.Printf("tbl_brand UpdateBrand  err : %v", err)
 	}
 
+}
+
+func GetAll(ctx context.Context) []Brand {
+	filter := bson.D{{}}
+	var list []Brand
+	if err := mongodb.GetMongoClient().FindManyCommon(ctx, "", "tbl_brand", filter, &list, nil); nil != err {
+		log.Printf("tbl_brand UpdateBrand  err : %v", err)
+	}
+	return list
 }
